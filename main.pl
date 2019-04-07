@@ -154,7 +154,7 @@ flush :- retract(cookie(_)), fail.
 flush :- retract(addon(_)), fail.
 
 start:-
-    write('----------------BEGIN SUBWAY -------------------'), nl,
+    write('--------------------END SUBWAY--------------------'), nl,
     prompt,
     end.
 
@@ -181,5 +181,5 @@ prompt :-
     overview. 
 
 end :-
-    write('----------------END SUBWAY -------------------'), nl,
+    write('--------------------END SUBWAY--------------------'), nl,
     flush.
