@@ -3,7 +3,6 @@
 % Declare dynamic predicates to store results
 :- dynamic meal/1, bread/1, main/1, cheese/1, veg/1, sauce/1, cookie/1, addon/1.
 
-
 validate_bread :-
     read(X),
     valid_bread(X) -> write('breads = '), write(X), nl, assert(bread(X));
@@ -25,7 +24,7 @@ validate_cheese :-
 validate_veg :-
     read(X),
     (not(X == 0) -> 
-        (valid_veg(X) -> write('vegs = '), write(X), nl, assert(veg(X));
+        (valid_veg(X) -> write('vegs = '), write(X), write(' (Enter 0 to conclude veggies)'), nl, assert(veg(X));
         write('Invalid veg, try again'), nl),
         validate_veg;
         true
@@ -34,7 +33,7 @@ validate_veg :-
 validate_sauce :-
     read(X),
     (not(X == 0) -> 
-        (valid_sauce(X) -> write('sauce = '), write(X), nl, assert(sauce(X));
+        (valid_sauce(X) -> write('sauce = '), write(X), write(' (Enter 0 to conclude sauces)'), nl, assert(sauce(X));
         write('Invalid sauce, try again'), nl),
         validate_sauce;
         true
@@ -43,7 +42,7 @@ validate_sauce :-
 validate_cookie :-
     read(X),
     (not(X == 0) -> 
-        (valid_cookie(X) -> write('cookie = '), write(X), nl, assert(cookie(X));
+        (valid_cookie(X) -> write('cookie = '), write(X), write(' (Enter 0 to conclude cookies)'), nl, assert(cookie(X));
         write('Invalid cookie, try again'), nl),
         validate_cookie;
         true
@@ -52,7 +51,7 @@ validate_cookie :-
 validate_addon :-
     read(X),
     (not(X == 0) -> 
-        (valid_addon(X) -> write('addon = '), write(X), nl, assert(addon(X));
+        (valid_addon(X) -> write('addon = '), write(X), write(' (Enter 0 to conclude addons)'), nl, assert(addon(X));
         write('Invalid addon, try again'), nl),
         validate_addon;
         true
@@ -110,27 +109,30 @@ meal_value :-
     ask_veg, ask_sauce.
 
 
-get_choices(Meal, Bread, Main, Cheese, Vegs, Sauces, Cookies, Addons) :-
-    findall(X, meal(X), Meal),
-    findall(X, bread(X), Bread),
-    findall(X, main(X), Main),
-    findall(X, cheese(X), Cheese),
-    % meal(Meal),
-    % bread(Bread),
-    % main(Main),
-    % cheese(Cheese),
+get_choices(Meals, Breads, Mains, Cheeses, Vegs, Sauces, Cookies, Addons) :-
+    findall(X, meal(X), Meals),
+    findall(X, bread(X), Breads),
+    findall(X, main(X), Mains),
+    findall(X, cheese(X), Cheeses),
     findall(X, veg(X), Vegs),
     findall(X, sauce(X), Sauces),
     findall(X, cookie(X), Cookies),
     findall(X, addon(X), Addons).
 
 overview :-
-    get_choices(Meal, Bread, Main, Cheese, Vegs, Sauces, Cookies, Addons), 
+    get_choices(Meals, Breads, Mains, Cheeses, Vegs, Sauces, Cookies, Addons), 
+    atomic_list_concat(Meals, Meal),
     write('Selected Meal: '), write(Meal), nl,
+
     write('Your orders:'),nl,
+    atomic_list_concat(Breads, Bread),
     write('Bread: '), write(Bread), nl,
+    atomic_list_concat(Mains, Main),
     write('Main: '), write(Main), nl,
+
+    atomic_list_concat(Cheeses, Cheese),
     write('Cheese: '), write(Cheese), nl,
+
     atomic_list_concat(Vegs, ',', Veg),
     write('Vegs: '), write(Veg), nl,
     atomic_list_concat(Sauces, ',', Sauce),
@@ -141,7 +143,22 @@ overview :-
     write('Addons: '), write(Addon), nl.
 
 
-init :-
+% Flush all choices from memory
+flush :- retract(meal(_)), fail.
+flush :- retract(bread(_)), fail.
+flush :- retract(main(_)), fail.
+flush :- retract(cheese(_)), fail.
+flush :- retract(veg(_)), fail.
+flush :- retract(sauce(_)), fail.
+flush :- retract(cookie(_)), fail.
+flush :- retract(addon(_)), fail.
+
+start:-
+    write('----------------BEGIN SUBWAY -------------------'), nl,
+    prompt,
+    end.
+
+prompt :-
     write('Please choose meal type [normal, vegan, veggie, value]'), nl,
     read(Meal),
 
@@ -163,12 +180,6 @@ init :-
     nl,
     overview. 
 
-% Flush all choices from memory
-flush :- retract(meal(_)), fail.
-flush :- retract(bread(_)), fail.
-flush :- retract(main(_)), fail.
-flush :- retract(cheese(_)), fail.
-flush :- retract(veg(_)), fail.
-flush :- retract(sauce(_)), fail.
-flush :- retract(cookie(_)), fail.
-flush :- retract(addon(_)), fail.
+end :-
+    write('----------------END SUBWAY -------------------'), nl,
+    flush.
