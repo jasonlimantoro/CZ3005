@@ -30,10 +30,9 @@ breads([
     monterey_cheddar,
     roasted_garlic_bread
 ]).
-mains([ham, turkey, coldcut, bbqchicken, tuna, eggmayo, meatball]).
+mains([ham, turkey, coldcut, bmt, roast_beef, tuna, steak_and_cheese, subway_melt, subway_club ]).
 cheeses([american, monterrey, none]).
 vegs([lettuce, tomato, cucumber, capsicum, onion, jalapeno, pickle, avocado]).
-sauces([bbq, honeymustard, mustard, sweetonion, redwine, mayonnaise, chipottle, ranch, vinegar]).
-cookies([chocchip, doublechoc, walnut, macnut, raspberry, brownie]).
+sauces([bbq, chili, honeymustard, mustard, sweetonion, redwine, mayonnaise, chipotle, ranch, vinegar]).
+cookies([chocochip, doublechocochip, oatmeal, white_choco_chip, macnut, raspberry, brownie]).
 addons([drink, soup, chips]).
-
