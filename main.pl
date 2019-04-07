@@ -1,8 +1,12 @@
+% Load the helpers
 :- ['module.pl'].
 
 % Declare dynamic predicates to store results
 :- dynamic meal/1, bread/1, main/1, cheese/1, veg/1, sauce/1, cookie/1, addon/1.
 
+/**
+ * Interactive validation for each menu
+ */
 validate_bread :-
     read(X),
     valid_bread(X) -> write('breads = '), write(X), nl, assert(bread(X));
@@ -57,6 +61,9 @@ validate_addon :-
         true
     ).
 
+/**
+ * Interactive prompt for each menu
+ */
 ask_bread :-
     write('Please choose breads'),nl,
     display_choices(breads),
@@ -92,6 +99,9 @@ ask_addon :-
     display_choices(addons),
     validate_addon.
 
+/**
+ * Main flow given the meal type
+ */
 meal_normal :-
     ask_bread, ask_main, ask_cheese, ask_veg,
     ask_sauce, ask_cookie, ask_addon.
@@ -109,6 +119,9 @@ meal_value :-
     ask_veg, ask_sauce.
 
 
+/**
+ * Gathering all user inputs 
+*/
 get_choices(Meals, Breads, Mains, Cheeses, Vegs, Sauces, Cookies, Addons) :-
     findall(X, meal(X), Meals),
     findall(X, bread(X), Breads),
@@ -119,6 +132,9 @@ get_choices(Meals, Breads, Mains, Cheeses, Vegs, Sauces, Cookies, Addons) :-
     findall(X, cookie(X), Cookies),
     findall(X, addon(X), Addons).
 
+/**
+ * Display them prettily
+ */ 
 overview :-
     get_choices(Meals, Breads, Mains, Cheeses, Vegs, Sauces, Cookies, Addons), 
     atomic_list_concat(Meals, Meal),
@@ -143,7 +159,9 @@ overview :-
     write('Addons: '), write(Addon), nl.
 
 
-% Flush all choices from memory
+/**
+ * Flush all choices from memory
+ */ 
 flush :- retract(meal(_)), fail.
 flush :- retract(bread(_)), fail.
 flush :- retract(main(_)), fail.
@@ -159,7 +177,7 @@ start:-
     end.
 
 prompt :-
-    write('Please choose meal type [normal, vegan, veggie, value]'), nl,
+    write('Please choose meal type (normal, vegan, veggie, value)'), nl,
     read(Meal),
 
     (Meal == normal ->
@@ -174,6 +192,7 @@ prompt :-
         write('meal = '), write(Meal), nl,
         meal_veggie, assert(meal(veggie));
 
+        % else, value
         write('meal = '), write(Meal), nl,
         meal_value, assert(meal(value))
     ),
