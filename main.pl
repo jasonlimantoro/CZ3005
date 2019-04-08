@@ -2,7 +2,7 @@
 :- ['module.pl'].
 
 % Declare dynamic predicates to store results
-:- dynamic meal/1, bread/1, main/1, cheese/1, veg/1, sauce/1, cookie/1, side/1, drink/1.
+:- dynamic meal/1, bread/1, main/1, cheese/1, veg/1, sauce/1, side/1, drink/1.
 
 /**
  * Interactive validation for each menu
@@ -49,15 +49,6 @@ validate_healthy_sauce :-
         (valid_healthy_sauce(X) -> write('sauce = '), write(X), write(' (Enter 0 to conclude sauces)'), nl, assert(sauce(X));
         write('Invalid sauce, try again'), nl),
         validate_healthy_sauce;
-        true
-    ).
-
-validate_cookie :-
-    read(X),
-    (not(X == 0) -> 
-        (valid_cookie(X) -> write('cookie = '), write(X), write(' (Enter 0 to conclude cookies)'), nl, assert(cookie(X));
-        write('Invalid cookie, try again'), nl),
-        validate_cookie;
         true
     ).
 
@@ -111,11 +102,6 @@ ask_healthy_sauce :-
     display_choices(healthy_sauces),
     validate_healthy_sauce.
 
-ask_cookie :-
-    write('Please choose cookie: '),nl,
-    display_choices(cookies),
-    validate_cookie.
-
 ask_side :-
     write('Please choose sides: '),nl,
     display_choices(sides),
@@ -131,7 +117,7 @@ ask_drink :-
  */
 meal_normal :-
     ask_bread, ask_main, ask_cheese, ask_veg,
-    ask_sauce, ask_cookie, ask_side, ask_drink.
+    ask_sauce, ask_side, ask_drink.
 
 meal_vegan :-
     ask_bread, ask_veg,
@@ -139,7 +125,7 @@ meal_vegan :-
 
 meal_veggie :-
     ask_bread, ask_veg,
-    ask_healthy_sauce, ask_cookie, ask_side, ask_drink.
+    ask_healthy_sauce, ask_side, ask_drink.
 
 meal_value :-
     ask_bread, ask_main, ask_cheese,
@@ -149,14 +135,13 @@ meal_value :-
 /**
  * Gathering all user inputs 
 */
-get_choices(Meals, Breads, Mains, Cheeses, Vegs, Sauces, Cookies, Sides, Drinks) :-
+get_choices(Meals, Breads, Mains, Cheeses, Vegs, Sauces, Sides, Drinks) :-
     findall(X, meal(X), Meals),
     findall(X, bread(X), Breads),
     findall(X, main(X), Mains),
     findall(X, cheese(X), Cheeses),
     findall(X, veg(X), Vegs),
     findall(X, sauce(X), Sauces),
-    findall(X, cookie(X), Cookies),
     findall(X, side(X), Sides),
     findall(X, drink(X), Drinks).
 
@@ -164,7 +149,7 @@ get_choices(Meals, Breads, Mains, Cheeses, Vegs, Sauces, Cookies, Sides, Drinks)
  * Display them prettily
  */ 
 overview :-
-    get_choices(Meals, Breads, Mains, Cheeses, Vegs, Sauces, Cookies, Sides, Drinks), 
+    get_choices(Meals, Breads, Mains, Cheeses, Vegs, Sauces, Sides, Drinks), 
     atomic_list_concat(Meals, Meal),
     write('Selected Meal: '), write(Meal), nl,
 
@@ -181,8 +166,6 @@ overview :-
     write('Vegs: '), write(Veg), nl,
     atomic_list_concat(Sauces, ',', Sauce),
     write('Sauces: '), write(Sauce), nl,
-    atomic_list_concat(Cookies, ',', Cookie),
-    write('Cookies: '), write(Cookie), nl,
     atomic_list_concat(Sides, ',', Side),
     write('Sides: '), write(Side), nl,
     atomic_list_concat(Drinks, ',', Drink),
@@ -198,7 +181,6 @@ flush :- retract(main(_)), fail.
 flush :- retract(cheese(_)), fail.
 flush :- retract(veg(_)), fail.
 flush :- retract(sauce(_)), fail.
-flush :- retract(cookie(_)), fail.
 flush :- retract(side(_)), fail.
 
 start:-
