@@ -43,6 +43,15 @@ validate_sauce :-
         true
     ).
 
+validate_healthy_sauce :-
+    read(X),
+    (not(X == 0) -> 
+        (valid_healthy_sauce(X) -> write('sauce = '), write(X), write(' (Enter 0 to conclude sauces)'), nl, assert(sauce(X));
+        write('Invalid sauce, try again'), nl),
+        validate_healthy_sauce;
+        true
+    ).
+
 validate_cookie :-
     read(X),
     (not(X == 0) -> 
@@ -89,6 +98,11 @@ ask_sauce :-
     display_choices(sauces),
     validate_sauce.
 
+ask_healthy_sauce :-
+    write('Please choose healthy sauces: '),nl,
+    display_choices(healthy_sauces),
+    validate_healthy_sauce.
+
 ask_cookie :-
     write('Please choose cookie: '),nl,
     display_choices(cookies),
@@ -108,11 +122,11 @@ meal_normal :-
 
 meal_vegan :-
     ask_bread, ask_veg,
-    ask_sauce, ask_addon.
+    ask_healthy_sauce, ask_addon.
 
 meal_veggie :-
     ask_bread, ask_veg,
-    ask_sauce, ask_cookie, ask_addon.
+    ask_healthy_sauce, ask_cookie, ask_addon.
 
 meal_value :-
     ask_bread, ask_main, ask_cheese,
